@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: clickhouse-forkTravel
+    restart: always
+    ports:
+      - "8100:8100"
+#    volumes:
+#      - ./datagrip/dump.sql:/docker-entrypoint-initdb.d/dump.sql
