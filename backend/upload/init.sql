@@ -1,0 +1,1 @@
+INSERT INTO tour.countries (id_of_tours, countries) VALUES (1, 'Russia');

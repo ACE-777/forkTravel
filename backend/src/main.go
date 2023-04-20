@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -16,6 +17,11 @@ func getHosts() string {
 	return *flagPort
 }
 
+type Tour struct {
+	ID      int    `json:"id"`
+	Country string `json:"country"`
+}
+
 func handlerPing(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	_, err := w.Write([]byte("pong"))
@@ -27,15 +33,78 @@ func handlerPing(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func main() {
-	conn, err := sql.Open("clickhouse", "tcp://<127.0.0.1>:<8777>?username=<admin>&password=<password>&database=<tour>")
+func handlerGetTour(w http.ResponseWriter, r *http.Request) {
+	nameOfCountry := r.URL.Query().Get("name")
+	fmt.Println(nameOfCountry)
+
+	//dsn := "tcp://localhost:9000?username=default&password=&database=tour"
+	//conn, err := clickhouse.Open(dsn)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//
+	//defer conn.Close()
+	//
+	//query := "SELECT * FROM users_info"
+	//rows, err := conn.Prepare(query)
+	//if err != nil {
+	//	fmt.Println("Err:", err)
+	//}
+	//defer rows.Close()
+	//exec, err := rows.Exec(nil)
+	//if err != nil {
+	//	fmt.Println("Err:", err)
+	//}
+	//
+	//fmt.Println(exec.)
+
+	dsn := "tcp://localhost:9000?username=default&password=&database=tour"
+	conn, err := sql.Open("clickhouse", dsn)
 	if err != nil {
-		fmt.Printf("can not connect to clickHouse: %v", err)
+		fmt.Println(err)
+	}
+	defer conn.Close()
+
+	rows, err := conn.Query("SELECT id_of_tours, countries FROM tour.countries")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var users []Tour
+
+	for rows.Next() {
+		var user Tour
+		err = rows.Scan(&user.ID, &user.Country)
+		if err != nil {
+			log.Fatal(err)
+		}
+		users = append(users, user)
 	}
 
-	defer func() { _ = conn.Close() }()
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	usersJSON, err := json.Marshal(users)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(usersJSON)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return
+}
+
+func main() {
 	http.HandleFunc("/", handlerPing)
+
+	http.HandleFunc("/tour", handlerGetTour)
 
 	log.Fatal(http.ListenAndServe(":"+getHosts(), nil))
 }

@@ -1,6 +1,6 @@
 CREATE DATABASE tour;
 
-CREATE TABLE tour.users_info
+CREATE TABLE tour.countries
 (
     id_of_tours Nullable(Int32),
     countries Nullable(String)
