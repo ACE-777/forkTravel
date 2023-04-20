@@ -37,27 +37,6 @@ func handlerGetTour(w http.ResponseWriter, r *http.Request) {
 	nameOfCountry := r.URL.Query().Get("name")
 	fmt.Println(nameOfCountry)
 
-	//dsn := "tcp://localhost:9000?username=default&password=&database=tour"
-	//conn, err := clickhouse.Open(dsn)
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-	//
-	//defer conn.Close()
-	//
-	//query := "SELECT * FROM users_info"
-	//rows, err := conn.Prepare(query)
-	//if err != nil {
-	//	fmt.Println("Err:", err)
-	//}
-	//defer rows.Close()
-	//exec, err := rows.Exec(nil)
-	//if err != nil {
-	//	fmt.Println("Err:", err)
-	//}
-	//
-	//fmt.Println(exec.)
-
 	dsn := "tcp://localhost:9000?username=default&password=&database=tour"
 	conn, err := sql.Open("clickhouse", dsn)
 	if err != nil {
