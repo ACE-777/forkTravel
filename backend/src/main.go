@@ -18,8 +18,11 @@ func getHosts() string {
 }
 
 type Tour struct {
-	ID      int    `json:"id"`
+	ID      string `json:"id"`
 	Country string `json:"country"`
+	Sea     string `json:"sea"`
+	Ex      string `json:"ex"`
+	Health  string `json:"health"`
 }
 
 func handlerPing(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +47,7 @@ func handlerGetTour(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	rows, err := conn.Query("SELECT id_of_tours, countries FROM tour.countries")
+	rows, err := conn.Query("SELECT countries, moun,sea,excursione,health FROM tour.table_name")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,7 +57,7 @@ func handlerGetTour(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var user Tour
-		err = rows.Scan(&user.ID, &user.Country)
+		err = rows.Scan(&user.ID, &user.Country, &user.Sea, &user.Ex, &user.Health)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -83,7 +86,7 @@ func handlerGetTour(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", handlerPing)
 
-	http.HandleFunc("/tour", handlerGetTour)
+	http.HandleFunc("/tour/", handlerGetTour)
 
 	log.Fatal(http.ListenAndServe(":"+getHosts(), nil))
 }
