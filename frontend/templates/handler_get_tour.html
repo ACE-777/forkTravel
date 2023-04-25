@@ -74,7 +74,20 @@
 
     <main class="px-3">
         <h1>Туры.</h1>
-        <p class="lead"> Страница со всеми турами: {{.}} </p>
+        <p class="lead"> Страница со всеми турами:  </p>
+        {{range .}}
+        <p class="lead"><b>{{.}} </b></p>
+        {{else}}
+        <p class="lead"><b>Больше нет туров( </b></p>
+        {{end}}
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+        <p class="lead"><b> Список</b></p>
+
         <p class="lead">
             <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Для того, чтобы узнать больше обратитесь в турагенство!</a>
         </p>
@@ -114,8 +127,9 @@
    </div>
 </body>
 </html> -->
+
 <!--    <h1>ГЛАВНАЯ СТРАНИЦА</h1>-->
-<!--    <p>Строка: {{ .Countries}}</p>-->
+<!--    <p>Строка: </p>-->
 <!--<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">-->
 <!--    <symbol id="check2" viewBox="0 0 16 16">-->
 <!--        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>-->

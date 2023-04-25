@@ -10,10 +10,6 @@ import (
 	"net/http"
 )
 
-type Test struct {
-	One string
-}
-
 type UserServer struct {
 	Database *database.DBConnect
 }
@@ -44,7 +40,7 @@ func (server *UserServer) HandlerGetTours(w http.ResponseWriter, r *http.Request
 		fmt.Printf("Error in func GetALLTours: %v", err)
 	}
 
-	usersJSON, err := json.Marshal(&tours)
+	usersJSON, err := json.Marshal(tours)
 	if err != nil {
 		fmt.Printf("Error in marshalalling func GetALLTours: %v", err)
 	}
@@ -59,7 +55,11 @@ func (server *UserServer) HandlerGetTours(w http.ResponseWriter, r *http.Request
 	}
 
 	//a := Test{One: "oNEEEEE"}
-	err = tmpl.Execute(w, string(usersJSON))
+	//err = tmpl.Execute(w, string(usersJSON))
+	err = tmpl.Execute(w, tours)
+	if err != nil {
+		log.Println(err)
+	}
 
 	//fmt.Fprintf(w, "<b>"+string(usersJSON)+"</b>")
 

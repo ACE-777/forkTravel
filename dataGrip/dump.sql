@@ -9,5 +9,5 @@ CREATE TABLE tour.countries
     health Nullable(VARCHAR)
 ) ENGINE = Memory;
 
-INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Russia', 'R', 'R', 'R', 'S');
+INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Russia', 'R', 'R', 'R', 'R');
 INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Argentina', 'A', 'A', 'A', 'A');
