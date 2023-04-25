@@ -1,1 +1,2 @@
-INSERT INTO tour.countries (id_of_tours, countries) VALUES (1, 'Russia');
+INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Russia', 'R', 'R', 'R', 'S');
+INSERT INTO tour.countries (countries, moun, sea, excursione, health) VALUES ('Argentina', 'A', 'A', 'A', 'A');
