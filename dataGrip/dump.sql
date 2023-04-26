@@ -1,6 +1,6 @@
 CREATE DATABASE tour;
 
-CREATE TABLE tour.countries
+CREATE TABLE IF NOT EXISTS tour.countries
 (
     countries Nullable(VARCHAR),
     mountain Nullable(VARCHAR),
