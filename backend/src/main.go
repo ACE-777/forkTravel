@@ -1,15 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"forkTravel/src/utils"
 	"forkTravel/src/utils/database"
-	_ "github.com/ClickHouse/clickhouse-go"
 )
 
-func getHosts() string {
-	flagPort := flag.String("port", "8000", "a port address")
+func getHosts() int {
+	flagPort := flag.Int("port", 8000, "a port address")
 	flag.Parse()
 	return *flagPort
 }
@@ -17,10 +17,12 @@ func getHosts() string {
 func main() {
 	fmt.Println("Start Service on 8000 port")
 
-	database := database.DBConnect{Ip: "127.0.0.1", Port: "9000", Password: "", User: "default", Database: "tour"}
+	database := database.DBConnect{Ip: "", Port: 9440, Password: "", User: "", Database: "tour"}
+
+	ctx := context.Background()
 
 	err := database.Open()
-	err = database.Connection.Ping()
+	err = database.Connection.Ping(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -32,5 +34,5 @@ func main() {
 	fmt.Printf("Success Connect to ClickHouse: %s:%s", database.Ip, database.Port)
 
 	server := utils.New(&database)
-	server.Start(8000)
+	server.Start(getHosts())
 }

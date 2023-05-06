@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"forkTravel/src/utils/database"
 	"forkTravel/src/utils/requests"
+	"log"
 	"net/http"
 )
 
@@ -17,17 +18,20 @@ func New(database *database.DBConnect) *Server {
 	return webServer
 }
 
+var mux = http.NewServeMux()
+
 func (server *Server) prepare() {
 
 	userServer := requests.NewUserServer(server.Database)
 
 	userHome := http.HandlerFunc(userServer.HandlerHome)
-	http.Handle("/home/", userHome)
+	mux.HandleFunc("/home/", userHome)
 
 	userGetTour := http.HandlerFunc(userServer.HandlerGetTours)
-	http.Handle("/tours/", userGetTour)
+	mux.HandleFunc("/tours/", userGetTour)
 }
 
 func (server *Server) Start(port int) {
-	http.ListenAndServe(fmt.Sprintf(":%v", port), nil)
+	err := http.ListenAndServe(fmt.Sprintf(":%v", port), mux)
+	log.Fatal(err)
 }

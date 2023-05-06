@@ -1,9 +1,12 @@
 package adapter
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
 	"forkTravel/src/utils/database"
-	_ "github.com/ClickHouse/clickhouse-go"
+	_ "github.com/ClickHouse/clickhouse-go/v2"
+	"log"
+	"time"
 )
 
 type Tour struct {
@@ -24,24 +27,45 @@ func CreateUserDatabaseAdapter(database *database.DBConnect) *UserDatabase {
 }
 
 func (adapter *UserDatabase) GetAllTours() (tours []*Tour, err error) {
-	rows, err := adapter.database.Connection.Query("SELECT countries, mountain, sea, excursion, health FROM tour.countries")
+	ctx := context.Background()
+	rows, err := adapter.database.Connection.Query(ctx, "SELECT countries, mountain, sea, excursion, health FROM tour.countries")
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
-	defer func(rows *sql.Rows) { _ = rows.Close() }(rows)
-
-	tours = make([]*Tour, 0)
+	defer rows.Close()
 
 	for rows.Next() {
-		tour := &Tour{}
-		err = rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health)
-		if err != nil {
-			return nil, err
+		var version string
+		var version2 string
+		var version3 string
+		var version4 time.Time
+		var version5 int64
+		if err := rows.Scan(&version, &version2, &version3, &version4, &version5); err != nil {
+			log.Fatal(err)
 		}
-
-		tours = append(tours, tour)
+		fmt.Println(version, version2, version3, version4, version5)
+		fmt.Println("====================================")
 	}
+
+	//rows, err := adapter.database.Connection.Query("SELECT countries, mountain, sea, excursion, health FROM tour.countries")
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//defer func(rows *sql.Rows) { _ = rows.Close() }(rows)
+	//
+	//tours = make([]*Tour, 0)
+	//
+	//for rows.Next() {
+	//	tour := &Tour{}
+	//	err = rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	tours = append(tours, tour)
+	//}
 
 	return
 }

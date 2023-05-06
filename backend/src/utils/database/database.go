@@ -1,29 +1,45 @@
 package database
 
 import (
-	"database/sql"
+	"crypto/tls"
 	"fmt"
-	_ "github.com/ClickHouse/clickhouse-go"
+	"github.com/ClickHouse/clickhouse-go/v2"
+	"log"
 )
 
 type DBConnect struct {
 	Ip       string `json:"ip"`
-	Port     string `json:"port"`
+	Port     int    `json:"port"`
 	User     string `json:"user"`
 	Password string `json:"password"`
 	Database string `json:"database"`
 
-	Connection *sql.DB
+	Connection clickhouse.Conn
 }
 
 func (client *DBConnect) Open() error {
+	tlsConfig := &tls.Config{}
 
-	driver := "clickhouse"
+	db, err := clickhouse.Open(&clickhouse.Options{
+		Addr: []string{fmt.Sprintf("%s:%d", client.Ip, client.Port)},
+		Auth: clickhouse.Auth{
+			Database: client.Database,
+			Username: client.User,
+			Password: client.Password,
+		},
+		TLS: tlsConfig,
+	})
 
-	db, err := sql.Open(driver, fmt.Sprintf("tcp://%s:%s?username=%s&password%s&database%s", client.Ip, client.Port, client.User, client.Password, client.Database))
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
+
+	//driver := "clickhouse"
+	//
+	//db, err := sql.Open(driver, fmt.Sprintf("tcp://%s:%s?username=%s&password%s&database%s", client.Ip, client.Port, client.User, client.Password, client.Database))
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 
 	client.Connection = db
 	return nil
