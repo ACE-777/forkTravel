@@ -6,7 +6,6 @@ import (
 	"forkTravel/src/utils/database"
 	_ "github.com/ClickHouse/clickhouse-go/v2"
 	"log"
-	"time"
 )
 
 type Tour struct {
@@ -28,23 +27,22 @@ func CreateUserDatabaseAdapter(database *database.DBConnect) *UserDatabase {
 
 func (adapter *UserDatabase) GetAllTours() (tours []*Tour, err error) {
 	ctx := context.Background()
-	rows, err := adapter.database.Connection.Query(ctx, "SELECT countries, mountain, sea, excursion, health FROM tour.countries")
+	rows, err := adapter.database.Connection.Query(ctx, "SELECT countries, mountain, sea, excursion, health FROM projects.countries")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer rows.Close()
 
+	tours = make([]*Tour, 0)
+
 	for rows.Next() {
-		var version string
-		var version2 string
-		var version3 string
-		var version4 time.Time
-		var version5 int64
-		if err := rows.Scan(&version, &version2, &version3, &version4, &version5); err != nil {
+		tour := &Tour{}
+		if err := rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(version, version2, version3, version4, version5)
+
+		tours = append(tours, tour)
 		fmt.Println("====================================")
 	}
 
