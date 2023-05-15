@@ -21,12 +21,17 @@ func NewUserServer(database *database.DBConnect) *UserServer {
 func (server *UserServer) HandlerHome(w http.ResponseWriter, r *http.Request) {
 
 	//w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write([]byte("pong"))
+	tmpl, err := template.ParseFiles("../frontend/templates/handler_home_tour.html")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("errr", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	log.Println("pong")
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Println(err)
+	}
 	return
 }
 
@@ -47,21 +52,17 @@ func (server *UserServer) HandlerGetTours(w http.ResponseWriter, r *http.Request
 
 	fmt.Println(string(usersJSON))
 
-	tmpl, err := template.ParseFiles("C:\\Users\\misha\\GolandProjects\\forkTravel\\frontend\\templates\\handler_get_tour.html")
+	tmpl, err := template.ParseFiles("../frontend/templates/handler_get_tour.html")
 	if err != nil {
 		fmt.Println("errr", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	//a := Test{One: "oNEEEEE"}
-	//err = tmpl.Execute(w, string(usersJSON))
 	err = tmpl.Execute(w, tours)
 	if err != nil {
 		log.Println(err)
 	}
-
-	//fmt.Fprintf(w, "<b>"+string(usersJSON)+"</b>")
 
 	return
 }

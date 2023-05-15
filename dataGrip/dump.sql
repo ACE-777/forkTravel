@@ -1,6 +1,4 @@
-CREATE DATABASE tour;
-
-CREATE TABLE IF NOT EXISTS tour.countries
+CREATE TABLE IF NOT EXISTS projects.countries
 (
     countries Nullable(VARCHAR),
     mountain Nullable(VARCHAR),
@@ -9,5 +7,5 @@ CREATE TABLE IF NOT EXISTS tour.countries
     health Nullable(VARCHAR)
 ) ENGINE = Memory;
 
-INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Russia', 'R', 'R', 'R', 'R');
-INSERT INTO tour.countries (countries, mountain, sea, excursion, health) VALUES ('Argentina', 'A', 'A', 'A', 'A');
+INSERT INTO projects.countries (countries, mountain, sea, excursion, health) VALUES ('Russia', 'R', 'R', 'R', 'R');
+INSERT INTO projects.countries (countries, mountain, sea, excursion, health) VALUES ('Argentina', 'A', 'A', 'A', 'A');
