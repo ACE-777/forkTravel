@@ -18,6 +18,7 @@
         .dropdown {
             background: #ECECEC;
             margin-right: 2px;
+            border-radius: 60px;
             border: none;
         }
 
@@ -37,8 +38,12 @@
             display: none;
         }
         #filtersDropdown option[disabled] {
+            font-weight: bold;
             display: none;
+
         }
+
+
     </style>
     <!--  <link rel="stylesheet" href="main_style.css"> -->
     <!-- <link rel="stylesheet" href="style.css"> -->
@@ -110,8 +115,9 @@
         </div>
     </header>
 
+    <\br>
 
-    <div class="dropdown-container p-2 d-flex flex-row " >
+    <div class="dropdown-container p-2 d-flex flex-row fw-bold" >
         <label for="fromDropdown"></label>
         <select class="dropdown p-2 fw-bold" id="fromDropdown" >
             <option value="" disabled selected hidden>Откуда</option>
@@ -122,21 +128,21 @@
 
         <label for="preferencesDropdown"> </label>
         <select class="dropdown p-2 fw-bold" id="preferencesDropdown" name="preferencesDropdown" multiple>
-            <option value="" disabled selected hidden>Предпочтения</option>
             <option value="option1 ">Список 2</option>
             <option value="option2">Список 2 - Опция 1</option>
             <option value="option3">Список 2 - Опция 2</option>
         </select>
 
-        <label for="filtersDropdown"> </label>
+        <label for="filtersDropdown"></label>
         <select class="dropdown p-2 fw-bold " id="filtersDropdown" name="filtersDropdown" multiple>
-            <option value="" disabled selected hidden>Фильтры</option>
             <option value="option1 ">Список 3</option>
             <option value="option2">Список 3 - Опция 1</option>
             <option value="option3">Список 3 - Опция 2</option>
         </select>
-        <button class="buttonSelect" type="button" onclick="submitForm()">Поиск</button>
+        <button class="buttonSelect fw-bold" type="button" onclick="submitForm()">Поиск</button>
     </div>
+
+    <\br>
 
     <script>
         function submitForm() {
@@ -172,13 +178,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#preferencesDropdown').select2();
+            $('#preferencesDropdown').select2({
+                placeholder: 'Предпочтения',
+                allowClear: true
+            });
         });
-    </script>
 
-    <script>
         $(document).ready(function() {
-            $('#filtersDropdown').select2();
+            $('#filtersDropdown').select2({
+                placeholder: 'Фильтры',
+                allowClear: true
+            });
+
         });
     </script>
 
