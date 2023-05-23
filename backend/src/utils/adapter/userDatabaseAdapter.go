@@ -91,12 +91,67 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 			defer rows2.Close()
 
 			for rows2.Next() {
-				tempResult := *result
-				if err := rows2.Scan(&tempResult.Second, &tempResult.SecondCountry); err != nil {
+				tempResultSecond := Result{
+					First:        result.First,
+					FirstCountry: result.FirstCountry,
+				}
+				if err := rows2.Scan(&tempResultSecond.Second, &tempResultSecond.SecondCountry); err != nil {
 					log.Fatal(err)
 				}
 
-				results = append(results, &tempResult)
+				if len(preferences) == 3 {
+					queryThird := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[2], preferences[2])
+					rows3, err := adapter.database.Connection.Query(ctx, queryThird)
+					if err != nil {
+						log.Fatal(err)
+					}
+
+					defer rows3.Close()
+
+					for rows3.Next() {
+						tempResultThird := Result{
+							First:         tempResultSecond.First,
+							FirstCountry:  tempResultSecond.FirstCountry,
+							Second:        tempResultSecond.Second,
+							SecondCountry: tempResultSecond.SecondCountry,
+						}
+						if err := rows3.Scan(&tempResultThird.Third, &tempResultThird.ThirdCountry); err != nil {
+							log.Fatal(err)
+						}
+
+						if len(preferences) == 4 {
+							queryFourth := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[2], preferences[2])
+							rows4, err := adapter.database.Connection.Query(ctx, queryFourth)
+							if err != nil {
+								log.Fatal(err)
+							}
+
+							defer rows4.Close()
+
+							for rows4.Next() {
+								tempResultFourth := Result{
+									First:         tempResultSecond.First,
+									FirstCountry:  tempResultSecond.FirstCountry,
+									Second:        tempResultSecond.Second,
+									SecondCountry: tempResultSecond.SecondCountry,
+									Third:         tempResultThird.Third,
+									ThirdCountry:  tempResultThird.ThirdCountry,
+								}
+
+								if err := rows3.Scan(&tempResultFourth.Third, &tempResultFourth.ThirdCountry); err != nil {
+									log.Fatal(err)
+								}
+
+								results = append(results, &tempResultFourth)
+							}
+
+						} else {
+							results = append(results, &tempResultThird)
+						}
+					}
+				} else {
+					results = append(results, &tempResultSecond)
+				}
 			}
 
 		}
