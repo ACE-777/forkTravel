@@ -47,6 +47,7 @@ func (server *UserServer) HandlerResult(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		fmt.Printf("Error in marshalalling func GetALLTours: %v", err)
 	}
+
 	fmt.Println("result", result)
 	fmt.Println(string(usersJSON))
 

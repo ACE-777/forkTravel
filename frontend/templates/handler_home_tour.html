@@ -102,13 +102,15 @@
         <label for="preferencesDropdown"> </label>
         <select class="dropdown p-2 p-lg-3 fw-bold justify-content-center" id="preferencesDropdown" name="preferencesDropdown" multiple>
             <option value="sea">Пляжный отдых</option>
-            <option value="excursion">Древний центр</option>
+            <option value="excursion">Исторический центр</option>
             <option value="mountain">Горнолыжный курорт</option>
             <option value="health">Здоровый отдых</option>
         </select>
         <label for="filtersDropdown"></label>
         <select class="dropdown p-2 fw-bold " id="filtersDropdown" name="filtersDropdown" multiple>
-            <option value="visa">Безвизовая страна</option>
+            <option value="without_visa">Безвизовый режим</option>
+            <option value="visa">Визовый режим</option>
+            <option value="electronic_visa">Электронная виза</option>
             <option value="in_one">В одной стране</option>
             <option value="in_various">В разных странах</option>
         </select>
@@ -137,14 +139,20 @@
                 }
             }
 
-            if (fromDropdown && preferencesDropdownValues.length > 0) {
-                var url = "/result/?from=" + encodeURIComponent(fromDropdown) + "&preferences=" +
-                    encodeURIComponent(preferencesDropdownValues.join(',')) + "&filters=" + encodeURIComponent(filtersDropdownValues.join(','));
+            if (filtersDropdownValues.includes("without_visa") && filtersDropdownValues.includes("visa")){
+                alert("Пожалуйста, выберите только одно значение связанное с визовым режимом.");
+            } else{
+                if (fromDropdown && preferencesDropdownValues.length > 0) {
+                    var url = "/result/?from=" + encodeURIComponent(fromDropdown) + "&preferences=" +
+                        encodeURIComponent(preferencesDropdownValues.join(',')) + "&filters=" + encodeURIComponent(filtersDropdownValues.join(','));
 
-                window.location.href = url;
-            } else {
-                alert("Пожалуйста, выберите значения из всех списков.");
+                    window.location.href = url;
+                } else {
+                    alert("Пожалуйста, выберите значения из всех списков.");
+                }
             }
+
+
         }
     </script>
 
@@ -163,7 +171,7 @@
             $('#filtersDropdown').select2({
                 placeholder: 'Фильтры',
                 allowClear: true,
-                width: 220
+                width: 230
             });
 
         });

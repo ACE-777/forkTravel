@@ -16,6 +16,12 @@
       background: #ECECEC;
       border-radius: 60px;
     }
+    .container_in{
+      background: black;
+      margin-right: 2px;
+      border-radius: 60px;
+      /*border: none;*/
+    }
     </style>
 </head>
 
@@ -51,13 +57,21 @@
     </div>
   </header>
 
-  <div class="container  d-flex flex-row fw-bold text-body" >
-    {{.From}}
-  </div>
+    <div class="container d-flex flex-row fw-bold" style="color:#343A40FF;">
+      <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
+        {{.From }}
+        </div>
+      <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
+        {{.Preference }}
+      </div>
+      <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
+        {{.Filters }}
+      </div>
+    </div>
 
   <main class="px-3">
-    {{range .}}
-      <p class="lead"><b>{{ .First}}, {{ .FirstCountry}}: {{.Second}}, {{.SecondCountry}}: {{.Third}}, {{.ThirdCountry}}:  {{.Fourth}}, {{.FourthCountry}}</b></p>
+    {{range .Result}}
+      <p class="lead"><b> {{ .First}}, {{ .FirstCountry}}: {{.Second}}, {{.SecondCountry}}: {{.Third}}, {{.ThirdCountry}}:  {{.Fourth}}, {{.FourthCountry}}</b></p>
     {{else}}
       <p class="lead"><b>Больше нет туров( </b></p>
     {{end}}
