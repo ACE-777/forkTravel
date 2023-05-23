@@ -120,9 +120,8 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 
 		output = &Output{}
 		output.From = UserFromCountry
-		output.Preference = replaceOnUsefulValues(strings.Split(UserPreferences, ","))
-		filters := strings.Split(UserFilters, ",")
-		output.Filters = filters
+		output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
+		output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
 		output.Result = results
 
 		return
@@ -137,19 +136,30 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 
 	output = &Output{}
 	output.From = UserFromCountry
-	output.Preference = replaceOnUsefulValues(strings.Split(UserPreferences, ","))
-	filters := strings.Split(UserFilters, ",")
-	output.Filters = filters
+	output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
+	output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
 	output.Result = results
 	return
 }
 
-func replaceOnUsefulValues(preferences []string) []string {
+func replaceOnUsefulValuesPreferences(preferences []string) []string {
 	for i := range preferences {
 		preferences[i] = strings.ReplaceAll(preferences[i], "sea", "Пляжный отдых")
 		preferences[i] = strings.ReplaceAll(preferences[i], "excursion", "Исторический центр")
 		preferences[i] = strings.ReplaceAll(preferences[i], "mountain", "Горнолыжный курорт")
 		preferences[i] = strings.ReplaceAll(preferences[i], "health", "Здоровый отдых")
+	}
+
+	return preferences
+}
+
+func replaceOnUsefulValuesFilters(preferences []string) []string {
+	for i := range preferences {
+		preferences[i] = strings.ReplaceAll(preferences[i], "without_visa", "Безвизовый режим")
+		preferences[i] = strings.ReplaceAll(preferences[i], "visa", "Визовый режим")
+		preferences[i] = strings.ReplaceAll(preferences[i], "electronic_visa", "Электронная виза")
+		preferences[i] = strings.ReplaceAll(preferences[i], "in_one", "В одной стране")
+		preferences[i] = strings.ReplaceAll(preferences[i], "in_various", "В разных странах")
 	}
 
 	return preferences

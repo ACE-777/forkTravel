@@ -38,10 +38,20 @@
             color: #343A40FF;
             border: none;
         }
+        .select2-container--default .select2-selection--single {
+            background: #ECECEC;
+            margin-right: 2px;
+            color: #343A40FF;
+            border: none;
+        }
+        #filtersDropdown option[disabled] {
+            font-weight: bold;
+            display: none;
+        }
         #preferencesDropdown option[disabled] {
             display: none;
         }
-        #filtersDropdown option[disabled] {
+        #fromDropdown option[disabled] {
             font-weight: bold;
             display: none;
         }
@@ -91,16 +101,16 @@
 
 
 
-    <div class="dropdown-container  d-flex flex-row fw-bold" >
-        <label for="fromDropdown"></label>
-        <select class="dropdown p-2 fw-bold" id="fromDropdown" style="color:#343A40FF;" >
-            <option value=""  disabled selected hidden>Откуда</option>
+    <div class="dropdown-container d-flex flex-row fw-bold" style="padding: 10px">
+        <label for="fromDropdown"> </label>
+        <select class="dropdown p-2 fw-bold justify-content-center" id="fromDropdown" name="fromDropdown" >
+            <option  value="" disabled selected hidden >Откуда</option>
             <option value="SPB">СПб</option>
             <option value="MSC">МСК</option>
             <option value="EKB">ЕКБ</option>
         </select>
         <label for="preferencesDropdown"> </label>
-        <select class="dropdown p-2 p-lg-3 fw-bold justify-content-center" id="preferencesDropdown" name="preferencesDropdown" multiple>
+        <select class="dropdown p-2  fw-bold " id="preferencesDropdown" name="preferencesDropdown" multiple>
             <option value="sea">Пляжный отдых</option>
             <option value="excursion">Исторический центр</option>
             <option value="mountain">Горнолыжный курорт</option>
@@ -148,7 +158,7 @@
 
                     window.location.href = url;
                 } else {
-                    alert("Пожалуйста, выберите значения из всех списков.");
+                    alert("Пожалуйста, выберите значения из списков.");
                 }
             }
 
@@ -159,6 +169,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#fromDropdown').select2({
+                placeholder: 'Откуда',
+                allowClear: true,
+                color: "#343A40FF",
+                width: 180
+            });
+        });
+
         $(document).ready(function() {
             $('#preferencesDropdown').select2({
                 placeholder: 'Предпочтения',
