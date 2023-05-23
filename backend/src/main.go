@@ -18,7 +18,6 @@ func getHosts() int {
 func main() {
 	fmt.Println("Start Service on 8000 port")
 
-	database := database.DBConnect{Ip: "rc1a-23es9acuj4dk5eqe.mdb.yandexcloud.net", Port: 9440, Password: "72b3CywH", User: "misha777776", Database: "projects"}
 	ctx := context.Background()
 
 	err := database.Open()
