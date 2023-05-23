@@ -120,7 +120,7 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 						}
 
 						if len(preferences) == 4 {
-							queryFourth := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[2], preferences[2])
+							queryFourth := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[3], preferences[3])
 							rows4, err := adapter.database.Connection.Query(ctx, queryFourth)
 							if err != nil {
 								log.Fatal(err)
@@ -138,7 +138,7 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 									ThirdCountry:  tempResultThird.ThirdCountry,
 								}
 
-								if err := rows3.Scan(&tempResultFourth.Third, &tempResultFourth.ThirdCountry); err != nil {
+								if err := rows4.Scan(&tempResultFourth.Fourth, &tempResultFourth.FourthCountry); err != nil {
 									log.Fatal(err)
 								}
 
