@@ -21,7 +21,7 @@ func NewUserServer(database *database.DBConnect) *UserServer {
 func (server *UserServer) HandlerHome(w http.ResponseWriter, r *http.Request) {
 
 	//w.Header().Set("Content-Type", "application/json")
-	tmpl, err := template.ParseFiles("../backend/src/utils/requests/handler_home_tour.html")
+	tmpl, err := template.ParseFiles("../frontend/templates/handler_home_tour.html")
 	if err != nil {
 		log.Printf("Can not parse template for home: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -42,9 +42,6 @@ func (server *UserServer) HandlerResult(w http.ResponseWriter, r *http.Request) 
 
 	userDatabaseAdapter := adapter.CreateUserDatabaseAdapter(server.Database)
 	result := userDatabaseAdapter.GetAllTours(UserFromCountry, UserPreferences, UserFilters)
-	//if err != nil {
-	//	fmt.Printf("Error in func GetALLTours: %v", err)
-	//}
 
 	usersJSON, err := json.Marshal(result)
 	if err != nil {
@@ -53,7 +50,7 @@ func (server *UserServer) HandlerResult(w http.ResponseWriter, r *http.Request) 
 	fmt.Println("result", result)
 	fmt.Println(string(usersJSON))
 
-	tmpl, err := template.ParseFiles("../backend/src/utils/requests/handler_get_result.html")
+	tmpl, err := template.ParseFiles("../frontend/templates/handler_get_result.html")
 	if err != nil {
 		fmt.Println("errr", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -67,35 +64,3 @@ func (server *UserServer) HandlerResult(w http.ResponseWriter, r *http.Request) 
 
 	return
 }
-
-//func (server *UserServer) HandlerGetTours(w http.ResponseWriter, r *http.Request) {
-//	//nameOfCountry := r.URL.Query().Get("name")
-//	//fmt.Println(nameOfCountry)
-//
-//	userDatabaseAdapter := adapter.CreateUserDatabaseAdapter(server.Database)
-//	tours, err := userDatabaseAdapter.GetAllTours()
-//	if err != nil {
-//		fmt.Printf("Error in func GetALLTours: %v", err)
-//	}
-//
-//	usersJSON, err := json.Marshal(tours)
-//	if err != nil {
-//		fmt.Printf("Error in marshalalling func GetALLTours: %v", err)
-//	}
-//
-//	fmt.Println(string(usersJSON))
-//
-//	tmpl, err := template.ParseFiles("../frontend/templates/handler_get_tour.html")
-//	if err != nil {
-//		fmt.Println("errr", err)
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//
-//	err = tmpl.Execute(w, tours)
-//	if err != nil {
-//		log.Println(err)
-//	}
-//
-//	return
-//}
