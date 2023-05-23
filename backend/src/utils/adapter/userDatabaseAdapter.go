@@ -6,6 +6,7 @@ import (
 	"forkTravel/src/utils/database"
 	_ "github.com/ClickHouse/clickhouse-go/v2"
 	"log"
+	"strings"
 )
 
 type Tour struct {
@@ -19,6 +20,17 @@ type Tour struct {
 	Info      string `json:"info" db:"info"`
 }
 
+type Result struct {
+	First         string `json:"first"`
+	FirstCountry  string `json:"firstCountry"`
+	Second        string `json:"second"`
+	SecondCountry string `json:"secondCountry"`
+	Third         string `json:"third"`
+	ThirdCountry  string `json:"thirdCountry"`
+	Fourth        string `json:"fourth"`
+	FourthCountry string `json:"fourthCountry"`
+}
+
 type UserDatabase struct {
 	database *database.DBConnect
 }
@@ -28,26 +40,51 @@ func CreateUserDatabaseAdapter(database *database.DBConnect) *UserDatabase {
 	return adapter
 }
 
-func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserFilters string) (tours []*Tour, err error) {
+func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserFilters string) (results []*Result) {
 	ctx := context.Background()
-	rows, err := adapter.database.Connection.Query(ctx, "SELECT * FROM projects.countries")
-	if err != nil {
-		log.Fatal(err)
-	}
+	results = make([]*Result, 0)
 
-	defer rows.Close()
-
-	tours = make([]*Tour, 0)
-
-	for rows.Next() {
-		tour := &Tour{}
-		if err := rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health, &tour.Visa, &tour.Continent, &tour.Info); err != nil {
+	if !strings.Contains(UserPreferences, ",") {
+		rows, err := adapter.database.Connection.Query(ctx, fmt.Sprintf("SELECT %v,countries FROM projects.countries WHERE %v != 'Нет'", UserPreferences, UserPreferences))
+		if err != nil {
 			log.Fatal(err)
 		}
 
-		tours = append(tours, tour)
-		fmt.Println("====================================")
+		defer rows.Close()
+
+		for rows.Next() {
+			result := &Result{}
+			if err := rows.Scan(&result.First, &result.FirstCountry); err != nil {
+				log.Fatal(err)
+
+			}
+			results = append(results, result)
+		}
+
+		return
+	} else {
+		return
 	}
+
+	//rows, err := adapter.database.Connection.Query(ctx, "SELECT * FROM projects.countries WHERE mountain != 'Нет'")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//defer rows.Close()
+	//
+	//tours = make([]*Tour, 0)
+	//
+	//for rows.Next() {
+	//	tour := &Tour{}
+	//	if err := rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health, &tour.Visa, &tour.Continent, &tour.Info); err != nil {
+	//		log.Fatal(err)
+	//
+	//	}
+	//	tour.Countries = ""
+	//	tours = append(tours, tour)
+	//	fmt.Println("====================================")
+	//}
 
 	//rows, err := adapter.database.Connection.Query("SELECT countries, mountain, sea, excursion, health FROM tour.countries")
 	//if err != nil {
@@ -68,5 +105,5 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	//	tours = append(tours, tour)
 	//}
 
-	return
+	//return
 }

@@ -41,10 +41,10 @@ func (server *UserServer) HandlerResult(w http.ResponseWriter, r *http.Request) 
 	UserFilters := r.URL.Query().Get("filters")
 
 	userDatabaseAdapter := adapter.CreateUserDatabaseAdapter(server.Database)
-	result, err := userDatabaseAdapter.GetAllTours(UserFromCountry, UserPreferences, UserFilters)
-	if err != nil {
-		fmt.Printf("Error in func GetALLTours: %v", err)
-	}
+	result := userDatabaseAdapter.GetAllTours(UserFromCountry, UserPreferences, UserFilters)
+	//if err != nil {
+	//	fmt.Printf("Error in func GetALLTours: %v", err)
+	//}
 
 	usersJSON, err := json.Marshal(result)
 	if err != nil {
