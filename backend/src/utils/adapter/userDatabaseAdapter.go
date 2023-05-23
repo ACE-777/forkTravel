@@ -45,7 +45,11 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	results = make([]*Result, 0)
 
 	if !strings.Contains(UserPreferences, ",") {
-		rows, err := adapter.database.Connection.Query(ctx, fmt.Sprintf("SELECT %v,countries FROM projects.countries WHERE %v != 'Нет'", UserPreferences, UserPreferences))
+		add_filter := ""
+		if UserFilters == "visa" {
+			add_filter = " AND visa == 'Безвизовая'"
+		}
+		rows, err := adapter.database.Connection.Query(ctx, fmt.Sprintf("SELECT %v,countries FROM projects.countries WHERE isNotNull(%v)%v", UserPreferences, UserPreferences, add_filter))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -63,7 +67,86 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 
 		return
 	} else {
+		preferences := strings.Split(UserPreferences, ",")
+		query := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[0], preferences[0])
+		rows1, err := adapter.database.Connection.Query(ctx, query)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer rows1.Close()
+
+		for rows1.Next() {
+			result := &Result{}
+			if err := rows1.Scan(&result.First, &result.FirstCountry); err != nil {
+				log.Fatal(err)
+			}
+
+			querySecond := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[1], preferences[1])
+			rows2, err := adapter.database.Connection.Query(ctx, querySecond)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			defer rows2.Close()
+
+			for rows2.Next() {
+				tempResult := *result
+				if err := rows2.Scan(&tempResult.Second, &tempResult.SecondCountry); err != nil {
+					log.Fatal(err)
+				}
+
+				results = append(results, &tempResult)
+			}
+
+		}
+
+		//query := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preferences[0], preferences[0])
+		//fmt.Println("query", query)
+		//rows, err := adapter.database.Connection.Query(ctx, query)
+		//if err != nil {
+		//	log.Fatal(err)
+		//}
+		//
+		//defer rows.Close()
+		//
+		//for rows.Next() {
+		//	result := &Result{}
+		//	values := make([]interface{}, len(preferences))
+		//	pointers := make([]interface{}, len(preferences))
+		//
+		//	for i := range values {
+		//		pointers[i] = &values[i]
+		//	}
+		//
+		//	if err := rows.Scan(pointers...); err != nil {
+		//		log.Fatal(err)
+		//	}
+		//
+		//	for i, pref := range preferences {
+		//		switch pref {
+		//		case "mountain":
+		//			result.First = values[i].(string)
+		//		case "sea":
+		//			result.Second = values[i].(string)
+		//		case "excursion":
+		//			result.Third = values[i].(string)
+		//		case "health":
+		//			result.Fourth = values[i].(string)
+		//		}
+		//	}
+		//
+		//	result.FirstCountry = values[len(values)-1].(string)
+		//	results = append(results, result)
+		//}
+
 		return
+
+		//tour := strings.Split(UserPreferences, ",")
+		//fmt.Println("tour", tour)
+		//fmt.Println("len", len(tour))
+		//
+		//return
 	}
 
 	//rows, err := adapter.database.Connection.Query(ctx, "SELECT * FROM projects.countries WHERE mountain != 'Нет'")
