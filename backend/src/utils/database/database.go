@@ -18,7 +18,7 @@ type DBConnect struct {
 }
 
 func (client *DBConnect) Open() error {
-	tlsConfig := &tls.Config{}
+	tlsConfig := &tls.Config{InsecureSkipVerify: true}
 
 	db, err := clickhouse.Open(&clickhouse.Options{
 		Addr: []string{fmt.Sprintf("%s:%d", client.Ip, client.Port)},

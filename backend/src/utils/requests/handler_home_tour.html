@@ -11,6 +11,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <style>
         .dropdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background: #ECECEC;
             border-radius: 60px;
         }
@@ -40,9 +43,14 @@
         #filtersDropdown option[disabled] {
             font-weight: bold;
             display: none;
-
         }
-
+        .select2-results__option {
+            color: black;
+        }
+        .select2-container .select2-results__option[aria-selected="true"] {
+            background-color: darkorange;
+            color: black;
+        }
 
     </style>
     <!--  <link rel="stylesheet" href="main_style.css"> -->
@@ -70,7 +78,7 @@
     </symbol>
 </svg>
 
-<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+<!--<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
     <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
         <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#sun-fill"></use></svg>
         <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
@@ -98,10 +106,10 @@
             </button>
         </li>
     </ul>
-</div>
+</div>-->
 
 
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" style="gap:20px" >
     <header class="mb-auto">
         <div>
             <!-- <h3 class="float-md-start mb-0">
@@ -110,39 +118,38 @@
             <h3 class="float-md-start mb-0">ForkTravel</h3>
             <nav class="nav nav-masthead justify-content-center float-md-end">
                 <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="/home/">Главная</a>
-                <a class="nav-link fw-bold py-1 px-0" href="/tours/">Все туры</a>
+                <!--<a class="nav-link fw-bold py-1 px-0" href="/tours/">Все туры</a>-->
             </nav>
         </div>
     </header>
 
-    <\br>
 
-    <div class="dropdown-container p-2 d-flex flex-row fw-bold" >
+
+    <div class="dropdown-container  d-flex flex-row fw-bold" >
         <label for="fromDropdown"></label>
         <select class="dropdown p-2 fw-bold" id="fromDropdown" >
             <option value="" disabled selected hidden>Откуда</option>
-            <option value="option1">Список 1</option>
-            <option value="option2">Список 1 - Опция 1</option>
-            <option value="option3">Список 1 - Опция 2</option>
+            <option value="SPB">СПб</option>
+            <option value="MSC">МСК</option>
+            <option value="EKB">ЕКБ</option>
         </select>
-
         <label for="preferencesDropdown"> </label>
-        <select class="dropdown p-2 fw-bold" id="preferencesDropdown" name="preferencesDropdown" multiple>
-            <option value="option1 ">Список 2</option>
-            <option value="option2">Список 2 - Опция 1</option>
-            <option value="option3">Список 2 - Опция 2</option>
+        <select class="dropdown p-2 p-lg-3 fw-bold justify-content-center" id="preferencesDropdown" name="preferencesDropdown" multiple>
+            <option value="sea">Пляжный отдых</option>
+            <option value="excursion">Древний центр</option>
+            <option value="mountain">Горнолыжный курорт</option>
+            <option value="health">Здоровый отдых</option>
         </select>
-
         <label for="filtersDropdown"></label>
         <select class="dropdown p-2 fw-bold " id="filtersDropdown" name="filtersDropdown" multiple>
-            <option value="option1 ">Список 3</option>
-            <option value="option2">Список 3 - Опция 1</option>
-            <option value="option3">Список 3 - Опция 2</option>
+            <option value="visa">Безвизовая страна</option>
+            <option value="in_one">В одной стране</option>
+            <option value="in_various">В разных странах</option>
         </select>
         <button class="buttonSelect fw-bold" type="button" onclick="submitForm()">Поиск</button>
     </div>
 
-    <\br>
+
 
     <script>
         function submitForm() {
@@ -166,11 +173,15 @@
 
             // Выполните здесь дополнительные проверки, если необходимо
 
-            var url = "/your-go-endpoint?fromDropdown=" + encodeURIComponent(fromDropdown) + "&preferencesDropdown=" +
-                encodeURIComponent(preferencesDropdownValues.join(',')) + "&filtersDropdown=" + encodeURIComponent(filtersDropdownValues.join(','));
 
-            // Перенаправление на URL-адрес с параметрами
-            window.location.href = url;
+            if (fromDropdown && preferencesDropdownValues.length > 0) {
+                var url = "/result/?from=" + encodeURIComponent(fromDropdown) + "&preferences=" +
+                    encodeURIComponent(preferencesDropdownValues.join(',')) + "&filters=" + encodeURIComponent(filtersDropdownValues.join(','));
+
+                window.location.href = url;
+            } else {
+                alert("Пожалуйста, выберите значения из всех списков.");
+            }
         }
     </script>
 
@@ -180,14 +191,16 @@
         $(document).ready(function() {
             $('#preferencesDropdown').select2({
                 placeholder: 'Предпочтения',
-                allowClear: true
+                allowClear: true,
+                width: 250
             });
         });
 
         $(document).ready(function() {
             $('#filtersDropdown').select2({
                 placeholder: 'Фильтры',
-                allowClear: true
+                allowClear: true,
+                width: 220
             });
 
         });
@@ -195,12 +208,12 @@
 
     <main class="px-3">
         <p class="lead">
-            <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Для того, чтобы узнать больше обратитесь в турагенство!</a>
+            <a href="https://aivengotravel.ru/" class="btn btn-lg btn-light fw-bold border-white bg-white">Для того, чтобы узнать больше обратитесь в турагенство!</a>
         </p>
     </main>
 
     <footer class="mt-auto text-white-50">
-        <p>Это футор</p>
+        <p>Дягилев Михаил</p>
     </footer>
 </div>
 </body>

@@ -27,8 +27,11 @@ func (server *Server) prepare() {
 	userHome := http.HandlerFunc(userServer.HandlerHome)
 	mux.HandleFunc("/home/", userHome)
 
-	userGetTour := http.HandlerFunc(userServer.HandlerGetTours)
-	mux.HandleFunc("/tours/", userGetTour)
+	userResult := http.HandlerFunc(userServer.HandlerResult)
+	mux.HandleFunc("/result/", userResult)
+
+	//userGetTour := http.HandlerFunc(userServer.HandlerGetTours)
+	//mux.HandleFunc("/tours/", userGetTour)
 }
 
 func (server *Server) Start(port int) {

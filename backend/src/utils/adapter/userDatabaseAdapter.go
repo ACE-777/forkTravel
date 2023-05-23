@@ -14,6 +14,9 @@ type Tour struct {
 	Sea       string `json:"sea" db:"sea"`
 	Excursion string `json:"excursion" db:"excursion"`
 	Health    string `json:"health" db:"health"`
+	Visa      string `json:"visa" db:"visa"`
+	Continent string `json:"continent" db:"continent"`
+	Info      string `json:"info" db:"info"`
 }
 
 type UserDatabase struct {
@@ -25,9 +28,9 @@ func CreateUserDatabaseAdapter(database *database.DBConnect) *UserDatabase {
 	return adapter
 }
 
-func (adapter *UserDatabase) GetAllTours() (tours []*Tour, err error) {
+func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserFilters string) (tours []*Tour, err error) {
 	ctx := context.Background()
-	rows, err := adapter.database.Connection.Query(ctx, "SELECT countries, mountain, sea, excursion, health FROM projects.countries")
+	rows, err := adapter.database.Connection.Query(ctx, "SELECT * FROM projects.countries")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +41,7 @@ func (adapter *UserDatabase) GetAllTours() (tours []*Tour, err error) {
 
 	for rows.Next() {
 		tour := &Tour{}
-		if err := rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health); err != nil {
+		if err := rows.Scan(&tour.Countries, &tour.Mountain, &tour.Sea, &tour.Excursion, &tour.Health, &tour.Visa, &tour.Continent, &tour.Info); err != nil {
 			log.Fatal(err)
 		}
 
