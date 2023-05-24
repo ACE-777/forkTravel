@@ -123,7 +123,8 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 		output.From = UserFromCountry
 		output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
 		output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
-		if len(strings.Split(UserFilters, ",")) > 1 {
+		fmt.Println("vvvvv", len(UserFilters))
+		if len(UserFilters) > 0 {
 			output.FiltersDone = true
 		}
 
@@ -143,7 +144,7 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	output.From = UserFromCountry
 	output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
 	output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
-	if len(strings.Split(UserFilters, ",")) > 1 {
+	if len(UserFilters) > 0 {
 		output.FiltersDone = true
 	}
 

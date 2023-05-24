@@ -22,6 +22,11 @@
       border-radius: 60px;
       /*border: none;*/
     }
+    .column {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
     </style>
 </head>
 
@@ -61,11 +66,14 @@
       <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
         {{.From }}
         </div>
+      <div class="column" style="gap:5px">
       {{range .Preference}}
       <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
         {{.}}
       </div>
       {{end}}
+      </div>
+      <div class="column" style="gap:5px">
       {{if .FiltersDone}}
         {{range .Filters}}
           <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
@@ -73,6 +81,7 @@
           </div>
         {{end}}
       {{end}}
+    </div>
     </div>
 
   <main class="px-3">
