@@ -17,7 +17,7 @@
       border-radius: 60px;
     }
     .container_in{
-      background: black;
+      background-color: rgba(13, 202, 240);
       margin-right: 2px;
       border-radius: 60px;
       /*border: none;*/
@@ -57,16 +57,22 @@
     </div>
   </header>
 
-    <div class="container d-flex flex-row fw-bold" style="color:#343A40FF;">
+    <div class="container d-flex flex-row fw-bold " style="color:#343A40FF;">
       <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
         {{.From }}
         </div>
+      {{range .Preference}}
       <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
-        {{.Preference }}
+        {{.}}
       </div>
-      <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
-        {{.Filters }}
-      </div>
+      {{end}}
+      {{if .FiltersDone}}
+        {{range .Filters}}
+          <div class="container_in p-2 fw-bold" id="container_in" style="color:#343A40FF;" >
+            {{.}}
+          </div>
+        {{end}}
+      {{end}}
     </div>
 
   <main class="px-3">
@@ -82,7 +88,7 @@
   </main>
 
   <footer class="mt-auto text-white-50">
-    <p>Дягилев Михаил</p>
+    <p>Дягилев Михаил 2023</p>
   </footer>
 </div>
 </body>

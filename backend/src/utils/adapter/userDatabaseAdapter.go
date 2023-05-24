@@ -21,10 +21,11 @@ type Tour struct {
 }
 
 type Output struct {
-	From       string    `json:"from"`
-	Preference []string  `json:"preference"`
-	Filters    []string  `json:"filters"`
-	Result     []*Result `json:"result"`
+	From        string    `json:"from"`
+	Preference  []string  `json:"preference"`
+	Filters     []string  `json:"filters"`
+	FiltersDone bool      `json:"filtersDone"`
+	Result      []*Result `json:"result"`
 }
 
 type Result struct {
@@ -122,6 +123,10 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 		output.From = UserFromCountry
 		output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
 		output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
+		if len(strings.Split(UserFilters, ",")) > 1 {
+			output.FiltersDone = true
+		}
+
 		output.Result = results
 
 		return
@@ -138,6 +143,10 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	output.From = UserFromCountry
 	output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
 	output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
+	if len(strings.Split(UserFilters, ",")) > 1 {
+		output.FiltersDone = true
+	}
+
 	output.Result = results
 	return
 }

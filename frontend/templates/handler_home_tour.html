@@ -149,9 +149,11 @@
                 }
             }
 
-            if (filtersDropdownValues.includes("without_visa") && filtersDropdownValues.includes("visa")){
-                alert("Пожалуйста, выберите только одно значение связанное с визовым режимом.");
-            } else{
+            if ((filtersDropdownValues.includes("without_visa") && filtersDropdownValues.includes("visa"))||(filtersDropdownValues.includes("without_visa") && filtersDropdownValues.includes("electronic_visa"))||(filtersDropdownValues.includes("visa") && filtersDropdownValues.includes("electronic_visa"))){
+                alert("Пожалуйста, выберите только одно значение связанное с визовым режимом");
+            } else if (filtersDropdownValues.includes("in_one") && filtersDropdownValues.includes("in_various")){
+                alert("Пожалуйста, выберите только одно значение связанное фильтром стран.");
+            }else{
                 if (fromDropdown && preferencesDropdownValues.length > 0) {
                     var url = "/result/?from=" + encodeURIComponent(fromDropdown) + "&preferences=" +
                         encodeURIComponent(preferencesDropdownValues.join(',')) + "&filters=" + encodeURIComponent(filtersDropdownValues.join(','));
@@ -210,7 +212,7 @@
     </main>
 
     <footer class="mt-auto text-white-50">
-        <p>Дягилев Михаил</p>
+        <p>Дягилев Михаил 2023</p>
     </footer>
 </div>
 </body>
