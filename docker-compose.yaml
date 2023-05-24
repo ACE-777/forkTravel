@@ -1,22 +1,10 @@
 version: '3.8'
 
 services:
-#  server_forktravel:
-#    build: ./backend
-#    restart: always
-#    ports:
-#      - 8008:8008
-#    depends_on:
-#      -  clickhouse
-#    environment:
-#      - PORT=8008
-
-  clickhouse:
-    image: clickhouse/clickhouse-server
-    container_name: clickhouse-forkTravel
+  server_forktravel:
+    build: ./backend
     restart: always
     ports:
-      - "8100:8123"
-      - "9000:9000"
-    volumes:
-      - ./datagrip/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - 10002:10002
+    environment:
+      - PORT=10002
