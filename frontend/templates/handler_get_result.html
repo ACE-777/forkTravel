@@ -27,6 +27,11 @@
       flex-direction: column;
       padding: 10px;
     }
+    .rows_tour{
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+    }
     </style>
 </head>
 
@@ -84,13 +89,83 @@
     </div>
     </div>
 
-  <main class="px-3">
-    {{range .Result}}
-      <p class="lead"><b> {{ .First}}, {{ .FirstCountry}}: {{.Second}}, {{.SecondCountry}}: {{.Third}}, {{.ThirdCountry}}:  {{.Fourth}}, {{.FourthCountry}}</b></p>
-    {{else}}
-      <p class="lead"><b>Больше нет туров( </b></p>
-    {{end}}
 
+  {{if .FirstDone}}
+  {{range .Result}}
+  <div class="rows_tour " style="gap:5px;background-color:#343A40FF;border-radius: 60px;" >
+    <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+      {{ .First}}, {{ .FirstCountry}}
+    </div>
+  </div>
+  {{else}}
+    <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+      К сожалению, по выбранным параметрам не существует туров. Попробуйте выбрать другие значения фильтров!
+    </div>
+  {{end}}
+  {{end}}
+
+  {{if .SecondDone}}
+    {{range .Result}}
+      <div class="rows_tour " style="gap:5px;background-color:#343A40FF;border-radius: 60px;" >
+        <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+          {{ .First}}, {{ .FirstCountry}}
+        </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Second}}, {{.SecondCountry}}
+      </div>
+      </div>
+    {{else}}
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        К сожалению, по выбранным параметрам не существует туров. Попробуйте выбрать другие значения фильтров!
+      </div>
+    {{end}}
+  {{end}}
+
+  {{if .ThirdDone}}
+    {{range .Result}}
+      <div class="rows_tour " style="gap:5px;background-color:#343A40FF;border-radius: 60px;" >
+        <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+          {{ .First}}, {{ .FirstCountry}}
+        </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Second}}, {{.SecondCountry}}
+      </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Third}}, {{.ThirdCountry}}
+      </div>
+      </div>
+    {{else}}
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        К сожалению, по выбранным параметрам не существует туров. Попробуйте выбрать другие значения фильтров!
+      </div>
+    {{end}}
+  {{end}}
+
+  {{if .FourthDone}}
+    {{range .Result}}
+      <div class="rows_tour " style="gap:5px;background-color:#343A40FF;border-radius: 60px;" >
+        <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+          {{ .First}}, {{ .FirstCountry}}
+        </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Second}}, {{.SecondCountry}}
+      </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Third}}, {{.ThirdCountry}}
+      </div>
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        {{.Fourth}}, {{.FourthCountry}}
+      </div>
+      </div>
+    {{else}}
+      <div class="rows_tour" style="gap:5px;background-color: rgba(13, 202, 240);border-radius: 60px;">
+        К сожалению, по выбранным параметрам не существует туров. Попробуйте выбрать другие значения фильтров!
+      </div>
+    {{end}}
+  {{end}}
+
+
+  <main class="px-3">
     <p class="lead">
       <a href="https://aivengotravel.ru/" class="btn btn-lg btn-light fw-bold border-white bg-white">Для того, чтобы узнать больше обратитесь в турагенство!</a>
     </p>

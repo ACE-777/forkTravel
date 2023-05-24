@@ -25,6 +25,10 @@ type Output struct {
 	Preference  []string  `json:"preference"`
 	Filters     []string  `json:"filters"`
 	FiltersDone bool      `json:"filtersDone"`
+	FirstDone   bool      `json:"firstDone"`
+	SecondDone  bool      `json:"secondDone"`
+	ThirdDone   bool      `json:"thirdDone"`
+	FourthDone  bool      `json:"fourthDone"`
 	Result      []*Result `json:"result"`
 }
 
@@ -48,19 +52,20 @@ func CreateUserDatabaseAdapter(database *database.DBConnect) *UserDatabase {
 	return adapter
 }
 
-func (adapter *UserDatabase) getAllToursRecursive(ctx context.Context, preferences []string, currentIndex int, currentResult *Result, results *[]*Result) error {
+func (adapter *UserDatabase) getAllToursRecursive(ctx context.Context, preferences []string, addFilterVisa string, currentIndex int, currentResult *Result, results *[]*Result) error {
 	if currentIndex == len(preferences) {
 		*results = append(*results, currentResult)
 		return nil
 	}
 
 	preference := preferences[currentIndex]
-	query := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)", preference, preference)
+	query := fmt.Sprintf("SELECT %v, countries FROM projects.countries WHERE isNotNull(%v)%v", preference, preference, addFilterVisa)
 
 	rows, err := adapter.database.Connection.Query(ctx, query)
 	if err != nil {
 		return err
 	}
+
 	defer rows.Close()
 
 	for rows.Next() {
@@ -85,7 +90,7 @@ func (adapter *UserDatabase) getAllToursRecursive(ctx context.Context, preferenc
 			}
 		}
 
-		err := adapter.getAllToursRecursive(ctx, preferences, currentIndex+1, &result, results)
+		err := adapter.getAllToursRecursive(ctx, preferences, addFilterVisa, currentIndex+1, &result, results)
 		if err != nil {
 			return err
 		}
@@ -98,11 +103,23 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	ctx := context.Background()
 	results := make([]*Result, 0)
 	if !strings.Contains(UserPreferences, ",") {
-		add_filter := ""
-		if UserFilters == "without_visa" {
-			add_filter = " AND visa == 'Безвизовая'"
+		addFilterVisa := ""
+		arrayFilter := strings.Split(UserFilters, ",")
+		for i := range arrayFilter {
+			if arrayFilter[i] == "without_visa" {
+				addFilterVisa = " AND visa == 'Безвизовая'"
+			}
+
+			if arrayFilter[i] == "visa" {
+				addFilterVisa = " AND visa == 'Виза'"
+			}
+
+			if arrayFilter[i] == "electronic_visa" {
+				addFilterVisa = " AND visa == 'Электронная виза'"
+			}
 		}
-		rows, err := adapter.database.Connection.Query(ctx, fmt.Sprintf("SELECT %v,countries FROM projects.countries WHERE isNotNull(%v)%v", UserPreferences, UserPreferences, add_filter))
+
+		rows, err := adapter.database.Connection.Query(ctx, fmt.Sprintf("SELECT %v,countries FROM projects.countries WHERE isNotNull(%v)%v", UserPreferences, UserPreferences, addFilterVisa))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -123,18 +140,34 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 		output.From = UserFromCountry
 		output.Preference = replaceOnUsefulValuesPreferences(strings.Split(UserPreferences, ","))
 		output.Filters = replaceOnUsefulValuesFilters(strings.Split(UserFilters, ","))
-		fmt.Println("vvvvv", len(UserFilters))
 		if len(UserFilters) > 0 {
 			output.FiltersDone = true
 		}
 
 		output.Result = results
-
+		output.FirstDone = true
 		return
 	} else {
+		addFilterVisa := ""
+		arrayFilter := strings.Split(UserFilters, ",")
+		for i := range arrayFilter {
+			if arrayFilter[i] == "without_visa" {
+				addFilterVisa = " AND visa == 'Безвизовая'"
+			}
+
+			if arrayFilter[i] == "visa" {
+				addFilterVisa = " AND visa == 'Виза'"
+			}
+
+			if arrayFilter[i] == "electronic_visa" {
+				addFilterVisa = " AND visa == 'Электронная виза'"
+			}
+
+		}
+
 		preferences := strings.Split(UserPreferences, ",")
 		currentResult := &Result{}
-		err := adapter.getAllToursRecursive(ctx, preferences, 0, currentResult, &results)
+		err := adapter.getAllToursRecursive(ctx, preferences, addFilterVisa, 0, currentResult, &results)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -149,6 +182,15 @@ func (adapter *UserDatabase) GetAllTours(UserFromCountry, UserPreferences, UserF
 	}
 
 	output.Result = results
+	switch len(output.Preference) {
+	case 2:
+		output.SecondDone = true
+	case 3:
+		output.ThirdDone = true
+	case 4:
+		output.FourthDone = true
+	}
+
 	return
 }
 
@@ -165,9 +207,18 @@ func replaceOnUsefulValuesPreferences(preferences []string) []string {
 
 func replaceOnUsefulValuesFilters(preferences []string) []string {
 	for i := range preferences {
-		preferences[i] = strings.ReplaceAll(preferences[i], "without_visa", "Безвизовый режим")
-		preferences[i] = strings.ReplaceAll(preferences[i], "visa", "Визовый режим")
-		preferences[i] = strings.ReplaceAll(preferences[i], "electronic_visa", "Электронная виза")
+		if preferences[i] == "without_visa" {
+			preferences[i] = "Безвизовый режим"
+		}
+
+		if preferences[i] == "visa" {
+			preferences[i] = "Визовый режим"
+		}
+
+		if preferences[i] == "electronic_visa" {
+			preferences[i] = "Электронная виза"
+		}
+
 		preferences[i] = strings.ReplaceAll(preferences[i], "in_one", "В одной стране")
 		preferences[i] = strings.ReplaceAll(preferences[i], "in_various", "В разных странах")
 	}
